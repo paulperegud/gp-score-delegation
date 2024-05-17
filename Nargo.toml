@@ -1,0 +1,5 @@
+[package]
+name = "hello_world"
+type = "bin"
+authors = [""]
+compiler_version = ">=0.28.0"
