@@ -1,7 +1,7 @@
 use dep::std;
 
 fn check_nullifier(
-    // nullifier: [u8;32],
+    nullifier: [u8;32],
     hashed_message: [u8;32],
     signature: [u8;64],
     pub_key_x: [u8;32],
@@ -9,26 +9,30 @@ fn check_nullifier(
 ) {
     let valid_signature = std::ecdsa_secp256k1::verify_signature(pub_key_x, pub_key_y, signature, hashed_message);
     assert(valid_signature);
+
+    let hash: [u8; 32] = std::hash::keccak256(signature, 64);
+    assert(nullifier == hash);
 }
 
 fn main(
-    // nullifier: pub [u8;32],
+    nullifier: pub [u8;32],
     hashed_message: [u8;32],
     signature: [u8;64],
     pub_key_x: [u8;32],
     pub_key_y: [u8;32]
 ) {
-    check_nullifier(hashed_message, signature, pub_key_x, pub_key_y);
+    check_nullifier(nullifier, hashed_message, signature, pub_key_x, pub_key_y);
 }
 
 #[test]
 fn test_main() {
+    let nullifier: [u8; 32] = [155, 104, 82, 43, 9, 182, 249, 90, 2, 14, 222, 34, 85, 108, 161, 160, 211, 52, 61, 9, 182, 8, 161, 240, 137, 127, 206, 232, 113, 150, 105, 232];
     let hashed_message: [u8; 32] = [213, 173, 129, 108, 230, 190, 182, 179, 132, 25, 171, 227, 164, 216, 150, 172, 96, 96, 14, 238, 63, 138, 224, 2, 222, 180, 19, 237, 92, 109, 244, 114];
     let pub_key_x: [u8; 32] = [105, 48, 244, 109, 208, 177, 109, 134, 109, 89, 209, 5, 74, 166, 50, 152, 179, 87, 73, 156, 209, 134, 46, 241, 111, 63, 85, 241, 202, 252, 235, 130];
     let pub_key_y: [u8; 32] = [248, 252, 223, 191, 232, 141, 54, 237, 249, 205, 45, 60, 153, 200, 212, 81, 179, 180, 161, 64, 145, 218, 64, 208, 14, 147, 51, 195, 211, 127, 230, 171];
     // first 64 bytes of the signature
     let signature: [u8; 64] = [123, 131, 26, 55, 51, 34, 160, 36, 93, 29, 177, 199, 228, 251, 16, 69, 5, 211, 255, 110, 86, 239, 9, 149, 98, 135, 108, 190, 60, 11, 67, 111, 15, 2, 16, 186, 193, 30, 42, 118, 173, 205, 152, 243, 58, 179, 92, 123, 217, 6, 106, 79, 165, 2, 244, 95, 147, 187, 64, 140, 82, 6, 103, 57];
-    main(hashed_message, signature, pub_key_x, pub_key_y);
+    main(nullifier, hashed_message, signature, pub_key_x, pub_key_y);
 }
 
 // message: delegate
