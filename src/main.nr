@@ -16,6 +16,7 @@ fn check_nullifier(
 
 fn main(
     nullifier: pub [u8;32],
+    // score: pub u8,
     hashed_message: [u8;32],
     signature: [u8;64],
     pub_key_x: [u8;32],
