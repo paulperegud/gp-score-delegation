@@ -1,0 +1,9 @@
+* working on processing of multiple (fake) stamps inside a circuit
+ ** possible way out - getting data for proofs from ceramic, see sh scripts
+* can't figure out how to validate proofs from passport.json, no real stamps yet
+
+possible way of structuring stamps processing:
+* recursive, one stamp at a time
+ * identity of certifier is hardcoded as a pubkey
+ * public input:
+  * 
