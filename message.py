@@ -14,31 +14,34 @@ def arr(b):
 def dearr(arr):
     return bytes([ int(x) for x in arr ])
 
-msg = "delegate"
+prover = dict() # this will become Prover.toml
 
-acc = w3.eth.account.from_key(b'1' * 32)
-pk = keys.PrivateKey(acc.key)
+# Each delegation only works for particular domain. This is an example domain.
+nullifier_domain = "I delegate my Gitcoin Passport score for Gitcoin Grants epoch 4"
 
-message = encode_defunct(text=msg)
-signed_message = w3.eth.account.sign_message(message, private_key=acc.key)
+# delegator
+alice_acc = w3.eth.account.from_key(b'1' * 32)
+alice_pk = keys.PrivateKey(alice_acc.key)
 
-prover = dict()
+message = encode_defunct(text=nullifier_domain)
+signed_message = w3.eth.account.sign_message(message, private_key=alice_acc.key)
+
 preimage = dict()
-preimage['pub_pubx'] = arr(pk.public_key[:32])
-preimage['pub_puby'] = arr(pk.public_key[32:])
+preimage['deleg_pubx'] = arr(alice_pk.public_key[:32])
+preimage['deleg_puby'] = arr(alice_pk.public_key[32:])
 preimage['signature'] = arr(signed_message.signature[:64])
 prover['preimage'] = preimage
 prover['score'] = 25
 prover['hashed_message'] = arr(signed_message.messageHash)
 prover['nullifier'] = arr(Web3.keccak(signed_message.signature[:64]))
 
+# this is certifier's address (Gitcoin Passport signing key)
 cert = w3.eth.account.from_key(b'2' * 32)
 cert_pk = keys.PrivateKey(cert.key)
 
 prover['cert_pubx'] = arr(cert_pk.public_key[:32])
 prover['cert_puby'] = arr(cert_pk.public_key[32:])
 stamps = []
-
 
 for i in range(10):
     score = i
