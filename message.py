@@ -14,6 +14,13 @@ def arr(b):
 def dearr(arr):
     return bytes([ int(x) for x in arr ])
 
+def null_terminated_arr(b, target_len=3):
+    b_len = len(str(b))
+    assert(b_len <= target_len)
+    left = [ x for x in str(b) ]
+    right = [ '0' for _ in range(target_len - b_len) ]
+    return left + right
+
 prover = dict() # this will become Prover.toml
 
 # Each delegation only works for particular domain. This is an example domain.
@@ -43,15 +50,17 @@ prover['cert_pubx'] = arr(cert_pk.public_key[:32])
 prover['cert_puby'] = arr(cert_pk.public_key[32:])
 stamps = []
 
-for i in range(10):
+for i in range(1, 11):
     score = i
     msg = f"{i}"
+    # TODO: replace with EIP712
     message = encode_defunct(text=msg)
     signed_message = w3.eth.account.sign_message(message, private_key=cert.key)
     stamp = {
         'signature': arr(signed_message.signature[:64]),
         'hashed_message': arr(signed_message.messageHash),
         'score': score,
+        'score_string': null_terminated_arr(score, 3)
     }
     stamps.append(stamp)
 
