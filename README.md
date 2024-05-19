@@ -1,5 +1,8 @@
 # Private delegation of Gitcoin Passport score
 
+> [!IMPORTANT]
+> This project is a work in progress. Among its drawbacks are stub stamps instead of actual Gitoin Passport stamps and at least one unpatched vulnerability in the circuit.
+
 Due to lack of privacy on Ethereum, people keep money separate from their public accounts (with ENS names and social) to have some modecum of financial privacy. This works requires discipline and produces problems in some circumstances. One of them is situation when you need both money and gitcoin passport score (e.g. quadratic voting/funding).
 
 To make this delegation secure and privacy preserving following is true:
